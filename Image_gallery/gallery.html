@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modern Image Gallery</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #00bcd4;
+      text-align: center;
+    }
+
+    /* Gallery container */
+    .gallery {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    /* Large image display */
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      max-height: 500px;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      background: #000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    }
+    .main-image-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      transition: opacity 0.4s ease-in-out;
+      user-select: none;
+      display: block;
+    }
+
+    /* Navigation arrows */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.4);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #00bcd4;
+      font-size: 28px;
+      transition: background 0.3s ease;
+      user-select: none;
+      z-index: 10;
+    }
+    .nav-arrow:hover {
+      background: rgba(0,188,212,0.8);
+      color: #fff;
+    }
+
+    .nav-arrow.prev {
+      left: 12px;
+    }
+    .nav-arrow.next {
+      right: 12px;
+    }
+
+    /* Thumbnails container */
+    .thumbnails {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: 900px;
+    }
+    .thumbnails img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      opacity: 0.7;
+      border: 2px solid transparent;
+      transition: opacity 0.2s ease, border-color 0.3s ease;
+      user-select: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    .thumbnails img:hover {
+      opacity: 1;
+    }
+    .thumbnails img.active {
+      opacity: 1;
+      border-color: #00bcd4;
+      box-shadow: 0 0 10px #00bcd4;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .thumbnails img {
+        width: 60px;
+        height: 45px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Modern Image Gallery</h1>
+  <div class="gallery" aria-label="Image Gallery">
+    <div class="main-image-container">
+      <img id="mainImage" src="https://picsum.photos/id/1015/800/500" alt="Gallery Image" />
+      <button class="nav-arrow prev" aria-label="Previous Image">&#10094;</button>
+      <button class="nav-arrow next" aria-label="Next Image">&#10095;</button>
+    </div>
+    <div class="thumbnails" role="list" aria-label="Image Thumbnails">
+      <!-- Thumbnails will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const images = [
+        { src: 'https://picsum.photos/id/1015/800/500', thumb: 'https://picsum.photos/id/1015/160/100', alt: 'Mountain Landscape' },
+        { src: 'https://picsum.photos/id/1024/800/500', thumb: 'https://picsum.photos/id/1024/160/100', alt: 'Beautiful Dog' },
+        { src: 'https://picsum.photos/id/1039/800/500', thumb: 'https://picsum.photos/id/1039/160/100', alt: 'Foggy Forest Road' },
+        { src: 'https://picsum.photos/id/1050/800/500', thumb: 'https://picsum.photos/id/1050/160/100', alt: 'Sunset Over Beach' },
+        { src: 'https://picsum.photos/id/1063/800/500', thumb: 'https://picsum.photos/id/1063/160/100', alt: 'City Skyline' },
+        { src: 'https://picsum.photos/id/1074/800/500', thumb: 'https://picsum.photos/id/1074/160/100', alt: 'Snowy Mountains' },
+        { src: 'https://picsum.photos/id/1084/800/500', thumb: 'https://picsum.photos/id/1084/160/100', alt: 'Coastline Waves' }
+      ];
+
+      let currentIndex = 0;
+      const mainImage = document.getElementById('mainImage');
+      const thumbnailsContainer = document.querySelector('.thumbnails');
+      const prevButton = document.querySelector('.nav-arrow.prev');
+      const nextButton = document.querySelector('.nav-arrow.next');
+
+      // Create thumbnails dynamically
+      function buildThumbnails() {
+        images.forEach((image, index) => {
+          const thumbImg = document.createElement('img');
+          thumbImg.src = image.thumb;
+          thumbImg.alt = image.alt;
+          thumbImg.role = "listitem";
+          if (index === currentIndex) thumbImg.classList.add('active');
+
+          thumbImg.addEventListener('click', () => {
+            updateMainImage(index);
+          });
+
+          thumbnailsContainer.appendChild(thumbImg);
+        });
+      }
+
+      // Update main image and active thumbnail
+      function updateMainImage(index) {
+        if (index < 0) {
+          index = images.length - 1;
+        }
+        if (index >= images.length) {
+          index = 0;
+        }
+        currentIndex = index;
+
+        // Smooth fade-out, change image, fade-in effect
+        mainImage.style.opacity = 0;
+        setTimeout(() => {
+          mainImage.src = images[currentIndex].src;
+          mainImage.alt = images[currentIndex].alt;
+          mainImage.style.opacity = 1;
+        }, 300);
+
+        // update active thumbnail
+        const thumbs = thumbnailsContainer.querySelectorAll('img');
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('active', i === currentIndex);
+        });
+      }
+
+      // Navigation
+      prevButton.addEventListener('click', () => {
+        updateMainImage(currentIndex - 1);
+      });
+
+      nextButton.addEventListener('click', () => {
+        updateMainImage(currentIndex + 1);
+      });
+
+      // Keyboard arrow navigation
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft') {
+          updateMainImage(currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+          updateMainImage(currentIndex + 1);
+        }
+      });
+
+      // Initialize gallery
+      buildThumbnails();
+    })();
+  </script>
+</body>
+</html>
+
+, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>

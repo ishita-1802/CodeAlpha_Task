@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modern Audio Player Demo</title>
+<style>
+  /* CSS: Styling the audio player and UI elements */
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .player {
+    background: #1e2a47;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+    width: 360px;
+    padding: 20px;
+    text-align: center;
+    user-select: none;
+  }
+  .player h2 {
+    margin: 10px 0 5px;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #00bcd4;
+  }
+  .player h3 {
+    margin: 0 0 15px;
+    color: #88c0d0;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1rem;
+  }
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 10px;
+  }
+  button {
+    background: #294a74;
+    border: none;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    color: #00bcd4;
+    font-size: 28px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  }
+  button:hover {
+    background-color: #00bcd4;
+    color: #1e2a47;
+    transform: scale(1.15);
+  }
+  button:focus {
+    outline: 3px solid #00e5ff;
+  }
+  .progress-container {
+    background: #294a74;
+    border-radius: 10px;
+    height: 8px;
+    margin: 20px 0;
+    cursor: pointer;
+    width: 100%;
+    position: relative;
+  }
+  .progress {
+    background: #00bcd4;
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.2s ease;
+  }
+  .time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #7eaec1;
+  }
+</style>
+</head>
+<body>
+  <div class="player" role="region" aria-label="Audio player">
+    <h2 id="title">Track Title</h2>
+    <h3 id="artist">Artist Name</h3>
+
+    <div class="progress-container" aria-label="Audio progress bar" tabindex="0">
+      <div class="progress"></div>
+    </div>
+    <div class="time">
+      <span id="current-time">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+
+    <div class="controls">
+      <button id="prev" aria-label="Previous Track" title="Previous">&#9664;&#xFE0E;</button>
+      <button id="play" aria-label="Play/Pause" title="Play">&#9654;</button>
+      <button id="next" aria-label="Next Track" title="Next">&#9654;&#9654;&#xFE0E;</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript: Adding audio player functionality
+    const tracks = [
+      {
+        title: 'Ocean Breeze',
+        artist: 'Calm Waves',
+        src: 'https://cdn.pixabay.com/download/audio/2021/11/12/audio_b1b4b28b40.mp3?filename=ocean-breeze-11236.mp3',
+      },
+      {
+        title: 'Morning Light',
+        artist: 'Bird Song',
+        src: 'https://cdn.pixabay.com/download/audio/2021/11/12/audio_3bba2242be.mp3?filename=morning-light-11232.mp3',
+      },
+      {
+        title: 'Night Walk',
+        artist: 'City Vibes',
+        src: 'https://cdn.pixabay.com/download/audio/2021/11/12/audio_c7a4688e49.mp3?filename=night-walk-11275.mp3',
+      }
+    ];
+
+    // Get page elements
+    const title = document.getElementById('title');
+    const artist = document.getElementById('artist');
+    const playBtn = document.getElementById('play');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const progressContainer = document.querySelector('.progress-container');
+    const progress = document.querySelector('.progress');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
+
+    // Create audio element
+    const audio = new Audio();
+    let currentTrackIndex = 0;
+    let isPlaying = false;
+
+    // Load initial track
+    function loadTrack(index) {
+      const track = tracks[index];
+      audio.src = track.src;
+      title.textContent = track.title;
+      artist.textContent = track.artist;
+      audio.load();
+    }
+
+    loadTrack(currentTrackIndex);
+
+    // Play audio
+    function playTrack() {
+      audio.play();
+      isPlaying = true;
+      playBtn.innerHTML = '&#10073;&#10073;'; // Pause icon
+      playBtn.title = 'Pause';
+    }
+    // Pause audio
+    function pauseTrack() {
+      audio.pause();
+      isPlaying = false;
+      playBtn.innerHTML = '&#9654;'; // Play icon
+      playBtn.title = 'Play';
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        pauseTrack();
+      } else {
+        playTrack();
+      }
+    });
+
+    // Prev track
+    prevBtn.addEventListener('click', () => {
+      currentTrackIndex--;
+      if (currentTrackIndex < 0) currentTrackIndex = tracks.length -1;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    // Next track
+    nextBtn.addEventListener('click', () => {
+      currentTrackIndex++;
+      if (currentTrackIndex > tracks.length -1) currentTrackIndex = 0;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    // Update progress bar
+    audio.addEventListener('timeupdate', () => {
+      if(audio.duration) {
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = progressPercent + '%';
+
+        // Update time displays
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        durationEl.textContent = formatTime(audio.duration);
+      }
+    });
+
+    // Format seconds to mm:ss
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60) || 0;
+      const secs = Math.floor(seconds % 60) || 0;
+      return minutes + ':' + (secs < 10 ? '0' : '') + secs;
+    }
+
+    // Seek audio on progress bar click
+    progressContainer.addEventListener('click', e => {
+      const width = progressContainer.clientWidth;
+      const clickX = e.offsetX;
+      if(audio.duration) {
+        audio.currentTime = (clickX / width) * audio.duration;
+      }
+    });
+
+    // Keyboard accessibility for progress bar seeking
+    progressContainer.addEventListener('keydown', e => {
+      if (!audio.duration) return;
+      if(e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
+      }
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        audio.currentTime = Math.max(audio.currentTime - 5, 0);
+      }
+    });
+
+    // Auto-play next track at end
+    audio.addEventListener('ended', () => {
+      nextBtn.click();
+    });
+  </script>
+</body>
+</html>
+

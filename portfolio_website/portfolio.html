@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Personal Portfolio</title>
+  <style>
+    /* Reset and base styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f2027;  /* gradient background */
+      background: linear-gradient(135deg, #2c5364 0%, #203a43 50%, #0f2027 100%);
+      color: #f0f0f0;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    a {
+      color: #00bcd4;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    h1, h2, h3 {
+      margin-bottom: 0.4em;
+      color: #00bcd4;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+    h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 2rem;
+      border-bottom: 2px solid #00bcd4;
+      padding-bottom: 8px;
+    }
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    /* Navigation */
+    nav {
+      background: rgba(0,0,0,0.5);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #007b8a;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      padding: 10px 0;
+      gap: 30px;
+    }
+    nav li {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    nav a {
+      padding: 6px 8px;
+      display: block;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      border-radius: 6px;
+    }
+    nav a:hover,
+    nav a.active {
+      background-color: #00bcd4;
+      color: #0f2027;
+    }
+
+    /* About Section */
+    #about {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 30px;
+      margin-top: 40px;
+      margin-bottom: 60px;
+    }
+    #about img {
+      border-radius: 50%;
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      box-shadow: 0 0 20px #00bcd4;
+      flex-shrink: 0;
+    }
+    #about .about-text {
+      flex: 1 1 300px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    /* Skills Section */
+    #skills {
+      margin-bottom: 60px;
+    }
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .skill {
+      background-color: #203a43;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      box-shadow: 0 0 10px #00bcd4;
+      transition: transform 0.2s ease;
+      cursor: default;
+    }
+    .skill:hover {
+      transform: scale(1.1);
+      background-color: #00bcd4;
+      color: #0f2027;
+    }
+
+    /* Experience Section */
+    #experience article {
+      background-color: #203a43;
+      padding: 20px 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px #007b8a;
+      transition: box-shadow 0.3s ease;
+    }
+    #experience article:hover {
+      box-shadow: 0 0 20px #00bcd4;
+    }
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .job-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+    .job-company {
+      font-style: italic;
+      color: #aad4e2;
+    }
+    .job-dates {
+      color: #66c2d9;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    .job-desc {
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    /* Projects Section */
+    #projects {
+      margin-bottom: 60px;
+    }
+    .project-card {
+      background-color: #203a43;
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 15px #007b8a;
+      transition: box-shadow 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .project-card:hover {
+      box-shadow: 0 0 25px #00bcd4;
+    }
+    .project-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+    .project-desc {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: #d0e7f1;
+    }
+    .project-links a {
+      margin-right: 18px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .project-links a:hover {
+      color: #00f0ff;
+    }
+
+    /* Contact Section */
+    #contact {
+      background-color: #203a43;
+      padding: 20px 25px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 0 auto 60px;
+      box-shadow: 0 0 20px #007b8a;
+      text-align: center;
+    }
+    #contact h2 {
+      margin-bottom: 16px;
+    }
+    #contact p {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    #contact a {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 24px;
+      background-color: #00bcd4;
+      color: #0f2027;
+      font-weight: 700;
+      box-shadow: 0 0 10px #00bcd4;
+      transition: background-color 0.3s ease;
+    }
+    #contact a:hover {
+      background-color: #0096a9;
+      color: #d0f2fb;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      padding: 15px 10px;
+      color: #66c2d9;
+      border-top: 1px solid #007b8a;
+      margin-top: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      #about {
+        flex-direction: column;
+        text-align: center;
+      }
+      #about .about-text {
+        flex: unset;
+      }
+      nav ul {
+        gap: 15px;
+        font-size: 0.9rem;
+      }
+      h1 {
+        font-size: 2.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#about" class="active">About Me</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section id="about" class="container" aria-label="About Me">
+    <img src="myphoto.jpg.jpeg" alt="Your Portrait" />
+    <div class="about-text">
+      <h1>Hello, I'm Ishita Vardhan</h1>
+      <p>I am a passionate software developer with a knack for creating beautiful and functional websites.I specialize in HTML, CSS, and JavaScript to build modern, responsive user experiences. My goal is to craft clean and efficient code and design interfaces that delight users.</p>
+    </div>
+  </section>
+
+  <section id="skills" class="container" aria-label="Skills">
+    <h2>Skills</h2>
+    <div class="skills-list" role="list">
+      <span class="skill" role="listitem">HTML5</span>
+      <span class="skill" role="listitem">CSS3</span>
+      <span class="skill" role="listitem">JavaScript</span>
+      <span class="skill" role="listitem">Python</span>
+      <span class="skill" role="listitem">Learning DSA</span>
+      <span class="skill" role="listitem">Basic C</span>
+      
+    </div>
+  </section>
+
+  <section id="experience" class="container" aria-label="Experience">
+    <h2>Experience</h2>
+    <article>
+      <div class="job-header">
+        <div>
+          <h3 class="job-title">Training course</h3>
+          <div class="job-company">Aptech computer classes</div>
+        </div>
+        <div class="job-dates">1-JUNE-24 TO 1-JULY-24</div>
+      </div>
+      <p class="job-desc">Learn front-end to build scalable, highly performant web applications using HTML,CSS & JavaScript features.</p>
+    </article>
+    <article>
+      <div class="job-header">
+        <div>
+          <h3 class="job-title">Introduction to Front-End Developement</h3>
+          <div class="job-company">Simplilearn</div>
+        </div>
+        <div class="job-dates">1-JUNE-25 to 1-JULY-25</div>
+      </div>
+      <p class="job-desc"></p>
+    </article>
+    <article>
+        <div class="job-header">
+         <div>
+          <h3 class="job-title">Internship in Frontend Developement</h3>
+          <div class="job-company">codealpha</div>
+         </div>
+        <div class="job-dates">1-JUNE-25 to 30-JUNE-25</div>
+      </div>
+      <p class="job-desc">In this internship I completed 4 tasks making a calculator, making portfolio website,image gallery,music player using HTML, CSS & JAVASCRIPT.</p>
+    </article>
+    <article>
+        <div class="job-header">
+         <div>
+          <h3 class="job-title">Responsive web design Certification Course</h3>
+          <div class="job-company">freecodecamp</div>
+         </div>
+        <div class="job-dates">1-MAY-25 to 5-JUNE-25</div>
+      </div>
+      <p class="job-desc">In this course I have created projects :- survey form, portfolio website, technical documentation page, tribute page.
+      </p>
+    </article>
+  </section>
+
+  <section id="projects" class="container" aria-label="Projects">
+    <h2>Projects</h2>
+    <div class="project-card" tabindex="0" role="article" aria-label="Portfolio Website Project">
+      <div class="project-title">Portfolio Website</div>
+      <div class="project-desc">A fully responsive portfolio website built with modern HTML, CSS, and JavaScript to showcase my skills and projects.</div>
+     
+    </div>
+    <div class="project-card" tabindex="0" role="article" aria-label="Landing page">
+      <div class="project-title">Landing page for Headphones</div>
+      <div class="project-desc">A landing page to showcase different hedphones .</div>
+      
+    </div>
+    <div class="project-card" tabindex="0" role="article" aria-label="Digital calculator">
+      <div class="project-title">Digital calculator</div>
+      <div class="project-desc">A digital calculator using HTML,CSS and Javascript .</div>
+      
+    </div>
+  </section>
+
+  <section id="contact" aria-label="Contact Me">
+    <div class="container">
+      <h2>Contact Me</h2>
+      <p>I'm currently open for new opportunities and freelance projects. Feel free to reach out to me!</p>
+      <p>Email: <a href="cu23250248@coeruniversity.ac.in">cu23250248@coeruniversity.ac.in</a></p>
+      <p>LinkedIn: <a href="https://www.linkedin.com/in/ishita-vardhan-12961b2ba/" target="_blank" rel="noopener noreferrer">https://www.linkedin.com/in/ishita-vardhan-12961b2ba/</a></p>
+      <a href="cu23250248@coeruniversity.ac.in">Send Email</a>
+    </div>
+  </section>
+
+  
+
+  <script>
+    // Script to highlight active nav item based on scroll position
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+
+    function activateNavLink() {
+      let index = sections.length;
+
+      while(--index && window.scrollY + 60 < sections[index].offsetTop) {} // +60 for nav height offset
+
+      navLinks.forEach(link => link.classList.remove('active'));
+      if(navLinks[index]) navLinks[index].classList.add('active');
+    }
+
+    window.addEventListener('scroll', activateNavLink);
+    window.addEventListener('load', activateNavLink);
+  </script>
+</body>
+</html>
+
